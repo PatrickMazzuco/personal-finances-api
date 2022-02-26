@@ -19,6 +19,12 @@
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
     "paths": {
+      "@config/*": ["./src/config/*"],
+      "@errors/*": ["./src/errors/*"],
+      "@filters/*": ["./src/filters/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@pipes/*": ["./src/pipes/*"],
+      "@utils/*": ["./src/utils/*"],
       "@src/*": ["./src/*"]
     }
   }
