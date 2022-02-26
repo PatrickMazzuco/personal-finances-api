@@ -20,7 +20,7 @@ async function bootstrap() {
   app.setGlobalPrefix(apiConfig.prefix);
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Persona Finances API')
+    .setTitle('Personal Finances API')
     .setDescription('Personal Finances App project')
     .setVersion(apiConfig.version)
     .setContact('Patrick Mazzuco', '', '')
