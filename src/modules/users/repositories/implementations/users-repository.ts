@@ -20,4 +20,9 @@ export class UsersRepository implements IUsersRepository {
     console.log({ email });
     throw new Error('Method not implemented.');
   }
+
+  update(data: User): Promise<void> {
+    console.log({ data });
+    throw new Error('Method not implemented.');
+  }
 }

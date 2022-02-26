@@ -4,7 +4,7 @@ import { IUsersRepository } from '@modules/users/repositories/users-repository.i
 import { Inject, Logger } from '@nestjs/common';
 import { RepositoryToken } from '@src/shared/enums/repository-token.enum';
 
-import { FindUserDTO } from './dtos/find-uset.dto';
+import { FindUserDTO } from './dtos/find-user.dto';
 
 export class FindUserService {
   private readonly logger = new Logger(this.constructor.name);

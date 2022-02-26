@@ -10,7 +10,7 @@ import { CreateUserService } from './create-user.service';
 @Controller('users')
 @ApiTags('users')
 export class CreateUserController {
-  constructor(private readonly createUserUseCase: CreateUserService) {}
+  constructor(private readonly createUserService: CreateUserService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -21,10 +21,10 @@ export class CreateUserController {
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
-    description: 'User already exists',
+    description: 'This email is already in use',
     type: HttpExceptionDTO,
   })
   async handle(@Body() data: CreateUserDTO): Promise<User> {
-    return this.createUserUseCase.execute(data);
+    return this.createUserService.execute(data);
   }
 }

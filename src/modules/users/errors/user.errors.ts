@@ -12,7 +12,7 @@ export namespace UserErrors {
 
   export class DuplicatedEmail extends BadRequestException {
     constructor(logger: Logger) {
-      const message = 'The email is already in use';
+      const message = 'This email is already in use';
       logger.error(message);
 
       super(message);

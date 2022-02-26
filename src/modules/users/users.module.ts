@@ -6,10 +6,12 @@ import { CreateUserController } from './use-cases/create-user/create-user.contro
 import { CreateUserService } from './use-cases/create-user/create-user.service';
 import { FindUserController } from './use-cases/find-user/find-user.controller';
 import { FindUserService } from './use-cases/find-user/find-user.service';
+import { UpdateUserController } from './use-cases/update-user/update-user.controller';
+import { UpdateUserService } from './use-cases/update-user/update-user.service';
 
 @Module({
   imports: [],
-  controllers: [CreateUserController, FindUserController],
+  controllers: [CreateUserController, FindUserController, UpdateUserController],
   providers: [
     {
       provide: RepositoryToken.USERS_REPOSITORY,
@@ -17,6 +19,7 @@ import { FindUserService } from './use-cases/find-user/find-user.service';
     },
     CreateUserService,
     FindUserService,
+    UpdateUserService,
   ],
   exports: [],
 })
