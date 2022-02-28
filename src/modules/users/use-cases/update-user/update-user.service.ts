@@ -27,13 +27,15 @@ export class UpdateUserService {
       throw new UserErrors.DuplicatedEmail(this.logger);
     }
 
-    const hashedPassword = await PasswordHash.hash(data.password);
-
     const userToUpdate = {
       ...existingUser,
       ...data,
-      password: hashedPassword,
     };
+
+    if (data.password) {
+      const hashedPassword = await PasswordHash.hash(data.password);
+      userToUpdate.password = hashedPassword;
+    }
 
     await this.usersRepository.update(userToUpdate);
   }

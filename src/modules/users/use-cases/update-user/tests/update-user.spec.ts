@@ -30,7 +30,7 @@ describe('UpdateUserService', () => {
 
   it('should be able to update an existing user', async () => {
     const user = userEntityMock();
-    const updatedUsedData = updateUserMock();
+    const updatedUserData = updateUserMock();
 
     jest
       .spyOn(UsersRepository.prototype, 'findOne')
@@ -43,17 +43,17 @@ describe('UpdateUserService', () => {
     jest.spyOn(UsersRepository.prototype, 'update').mockResolvedValueOnce();
 
     await expect(
-      updateUserService.execute(updatedUsedData),
+      updateUserService.execute(updatedUserData),
     ).resolves.not.toThrow();
   });
 
-  it('should not be able to update a user with a duplicated email', async () => {
+  it("should not be able to change an user's email to an existing email", async () => {
     const user = userEntityMock();
     const anotherUser = {
       ...userEntityMock(),
       id: 'another-user-id',
     };
-    const updatedUsedData = updateUserMock();
+    const updatedUserData = updateUserMock();
 
     jest
       .spyOn(UsersRepository.prototype, 'findOne')
@@ -66,19 +66,19 @@ describe('UpdateUserService', () => {
     jest.spyOn(UsersRepository.prototype, 'update').mockResolvedValueOnce();
 
     await expect(
-      updateUserService.execute(updatedUsedData),
+      updateUserService.execute(updatedUserData),
     ).rejects.toBeInstanceOf(UserErrors.DuplicatedEmail);
   });
 
   it('should not be able to update an inexistent user', async () => {
-    const updatedUsedData = updateUserMock();
+    const updatedUserData = updateUserMock();
 
     jest
       .spyOn(UsersRepository.prototype, 'findOne')
       .mockResolvedValueOnce(null);
 
     await expect(
-      updateUserService.execute(updatedUsedData),
+      updateUserService.execute(updatedUserData),
     ).rejects.toBeInstanceOf(UserErrors.NotFound);
   });
 });
