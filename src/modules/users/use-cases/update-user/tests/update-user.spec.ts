@@ -3,10 +3,7 @@ import { UsersRepository } from '@modules/users/repositories/implementations/use
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '@src/app.module';
-import {
-  updateUserMock,
-  userEntityMock,
-} from '@utils/security/tests/mocks/users.mocks';
+import { updateUserMock, userEntityMock } from '@utils/tests/mocks/users.mocks';
 
 import { UpdateUserService } from '../update-user.service';
 

@@ -21,6 +21,8 @@ export class FindUserService {
       throw new UserErrors.NotFound(this.logger);
     }
 
+    delete existingUser.password;
+
     return existingUser;
   }
 }

@@ -1,4 +1,4 @@
-import { User } from '@modules/users/entities/user';
+import { UserDTO } from '@modules/users/dtos/user.dto';
 import { UserErrors } from '@modules/users/errors/user.errors';
 import { IUsersRepository } from '@modules/users/repositories/users-repository.interface';
 import { CreateUserDTO } from '@modules/users/use-cases/create-user/dtos/create-user.dto';
@@ -14,7 +14,7 @@ export class CreateUserService {
     private readonly usersRepository: IUsersRepository,
   ) {}
 
-  async execute(data: CreateUserDTO): Promise<User> {
+  async execute(data: CreateUserDTO): Promise<UserDTO> {
     const existingUser = await this.usersRepository.findOneByEmail(data.email);
 
     if (existingUser) {
@@ -24,9 +24,13 @@ export class CreateUserService {
     const { password, ...userData } = data;
     const hashedPassword = await PasswordHash.hash(password);
 
-    return this.usersRepository.create({
+    const createdUser = await this.usersRepository.create({
       ...userData,
       password: hashedPassword,
     });
+
+    delete createdUser.password;
+
+    return createdUser;
   }
 }

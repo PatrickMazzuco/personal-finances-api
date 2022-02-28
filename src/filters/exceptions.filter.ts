@@ -26,13 +26,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
       }
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
-      ['sandbox', 'production', 'development'].includes(process.env.NODE_ENV) &&
-        console.log(exception);
+      process.env.NODE_ENV !== 'test' && console.log(exception);
     }
 
     if (
       status === HttpStatus.INTERNAL_SERVER_ERROR &&
-      process.env.NODE_ENV === 'development'
+      !['sandbox', 'production', 'test'].includes(process.env.NODE_ENV)
     ) {
       return response.status(status).json({
         message: exception.message,

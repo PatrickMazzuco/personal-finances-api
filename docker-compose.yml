@@ -1,0 +1,16 @@
+services:
+  database:
+    image: postgres
+    container_name: finances-db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pfa-development
+      - POSTGRES_DB=personal_finances
+    volumes:
+      - pgdata:/data/postgres
+volumes:
+  pgdata:
+    driver: local

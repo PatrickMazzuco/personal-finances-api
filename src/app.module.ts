@@ -1,3 +1,4 @@
+import { getEnvFile } from '@config/env';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
@@ -6,7 +7,13 @@ import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), UsersModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: getEnvFile(),
+    }),
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

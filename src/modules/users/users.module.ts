@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PrismaService } from '@src/prisma.service';
 import { RepositoryToken } from '@src/shared/enums/repository-token.enum';
 
 import { UsersRepository } from './repositories/implementations/users-repository';
@@ -17,6 +18,7 @@ import { UpdateUserService } from './use-cases/update-user/update-user.service';
       provide: RepositoryToken.USERS_REPOSITORY,
       useClass: UsersRepository,
     },
+    PrismaService,
     CreateUserService,
     FindUserService,
     UpdateUserService,

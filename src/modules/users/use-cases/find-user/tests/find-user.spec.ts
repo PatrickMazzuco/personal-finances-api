@@ -3,7 +3,7 @@ import { UsersRepository } from '@modules/users/repositories/implementations/use
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '@src/app.module';
-import { userEntityMock } from '@utils/security/tests/mocks/users.mocks';
+import { userEntityMock } from '@utils/tests/mocks/users.mocks';
 
 import { FindUserService } from '../find-user.service';
 
