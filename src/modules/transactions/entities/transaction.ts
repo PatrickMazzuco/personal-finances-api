@@ -29,7 +29,6 @@ export class Transaction {
   description: string;
 
   @ManyToOne(() => User, user => user.transactions, {
-    eager: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

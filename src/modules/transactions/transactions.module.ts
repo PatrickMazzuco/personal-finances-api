@@ -7,16 +7,19 @@ import { Transaction } from './entities/transaction';
 import { TransactionsRepository } from './repositories/implementations/transactions-repository';
 import { CreateTransactionController } from './use-cases/create-transaction/create-transaction.controller';
 import { CreateTransactionService } from './use-cases/create-transaction/create-transaction.service';
+import { ListTransactionsController } from './use-cases/list-transactions/list-transactions.controller';
+import { ListTransactionsService } from './use-cases/list-transactions/list-transactions.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Transaction]), UsersModule],
-  controllers: [CreateTransactionController],
+  controllers: [CreateTransactionController, ListTransactionsController],
   providers: [
     {
       provide: RepositoryToken.TRANSACTIONS_REPOSITORY,
       useClass: TransactionsRepository,
     },
     CreateTransactionService,
+    ListTransactionsService,
   ],
 })
 export class TransactionsModule {}

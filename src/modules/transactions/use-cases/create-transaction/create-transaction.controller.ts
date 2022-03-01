@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthenticatedRequest } from '@src/shared/dtos/AuthenticatedRequest';
+import { AuthenticatedRequest } from '@src/shared/dtos/authenticated-request.dto';
 
 import { CreateTransactionService } from './create-transaction.service';
 import { CreateTransactionBodyDTO } from './dtos/create-transaction-body.dto';
