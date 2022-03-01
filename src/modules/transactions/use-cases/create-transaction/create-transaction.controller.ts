@@ -1,13 +1,24 @@
-import { HttpExceptionDTO } from '@errors/http-exception.dto';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt.guard';
 import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
-import { CreateTransactionDTO } from '@modules/transactions/use-cases/create-transaction/dtos/create-transaction.dto';
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthenticatedRequest } from '@src/shared/dtos/AuthenticatedRequest';
 
 import { CreateTransactionService } from './create-transaction.service';
+import { CreateTransactionBodyDTO } from './dtos/create-transaction-body.dto';
 
 @Controller('transactions')
 @ApiTags('transactions')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class CreateTransactionController {
   constructor(
     private readonly createTransactionService: CreateTransactionService,
@@ -20,12 +31,13 @@ export class CreateTransactionController {
     description: 'Transaction created',
     type: TransactionDTO,
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: 'This email is already in use',
-    type: HttpExceptionDTO,
-  })
-  async handle(@Body() data: CreateTransactionDTO): Promise<TransactionDTO> {
-    return this.createTransactionService.execute(data);
+  async handle(
+    @Req() request: AuthenticatedRequest,
+    @Body() data: CreateTransactionBodyDTO,
+  ): Promise<TransactionDTO> {
+    return this.createTransactionService.execute({
+      ...data,
+      userId: request.user.id,
+    });
   }
 }
