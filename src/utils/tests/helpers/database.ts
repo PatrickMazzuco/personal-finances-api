@@ -1,16 +1,23 @@
+import { ITransactionsRepository } from '@modules/transactions/repositories/transactions-repository.interface';
+import { IUsersRepository } from '@modules/users/repositories/users-repository.interface';
 import { TestingModule } from '@nestjs/testing';
-import { PrismaService } from '@src/prisma.service';
+import { RepositoryToken } from '@src/shared/enums/repository-token.enum';
 
 export class DatabaseTestHelper {
-  private prisma: PrismaService;
-
+  private usersRepository: IUsersRepository;
+  private transactionsRepository: ITransactionsRepository;
   constructor(private readonly module: TestingModule) {
-    this.prisma = module.get<PrismaService>(PrismaService);
+    this.usersRepository = module.get<IUsersRepository>(
+      RepositoryToken.USERS_REPOSITORY,
+    );
+
+    this.transactionsRepository = module.get<ITransactionsRepository>(
+      RepositoryToken.TRANSACTIONS_REPOSITORY,
+    );
   }
 
   async clearDatabase(): Promise<void> {
-    const deleteUsers = this.prisma.user.deleteMany();
-
-    await this.prisma.$transaction([deleteUsers]);
+    await this.transactionsRepository.truncateTable();
+    await this.usersRepository.truncateTable();
   }
 }

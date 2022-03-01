@@ -15,28 +15,26 @@ export class UpdateUserService {
   ) {}
 
   async execute(data: UpdateUserDTO): Promise<void> {
-    const existingUser = await this.usersRepository.findOne(data.id);
+    const { id, ...dataToUpdate } = data;
+    const existingUser = await this.usersRepository.findOne(id);
 
     if (!existingUser) {
       throw new UserErrors.NotFound(this.logger);
     }
 
-    const userByEmail = await this.usersRepository.findOneByEmail(data.email);
+    if (data.email) {
+      const userByEmail = await this.usersRepository.findOneByEmail(data.email);
 
-    if (userByEmail && userByEmail.id !== existingUser.id) {
-      throw new UserErrors.DuplicatedEmail(this.logger);
+      if (userByEmail && userByEmail.id !== existingUser.id) {
+        throw new UserErrors.DuplicatedEmail(this.logger);
+      }
     }
-
-    const userToUpdate = {
-      ...existingUser,
-      ...data,
-    };
 
     if (data.password) {
       const hashedPassword = await PasswordHash.hash(data.password);
-      userToUpdate.password = hashedPassword;
+      dataToUpdate.password = hashedPassword;
     }
 
-    await this.usersRepository.update(userToUpdate);
+    await this.usersRepository.update(data.id, dataToUpdate);
   }
 }

@@ -10,6 +10,7 @@ export function userEntityMock(): User {
     name: 'John Doe',
     email: 'jhondoe@email.com',
     password: '123456',
+    transactions: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   };

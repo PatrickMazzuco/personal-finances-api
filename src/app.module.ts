@@ -1,9 +1,12 @@
 import { getEnvFile } from '@config/env';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { getDatabaseConfig } from './database/config';
+import { TransactionsModule } from './modules/transactions/transactions.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
@@ -12,7 +15,12 @@ import { UsersModule } from './modules/users/users.module';
       isGlobal: true,
       envFilePath: getEnvFile(),
     }),
+    TypeOrmModule.forRoot({
+      ...getDatabaseConfig(),
+      autoLoadEntities: true,
+    }),
     UsersModule,
+    TransactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
