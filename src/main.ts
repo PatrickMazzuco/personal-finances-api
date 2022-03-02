@@ -24,6 +24,7 @@ async function bootstrap() {
     .setDescription('Personal Finances App project')
     .setVersion(apiConfig.version)
     .setContact('Patrick Mazzuco', '', '')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
