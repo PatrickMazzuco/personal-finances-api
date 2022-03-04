@@ -1,9 +1,9 @@
-import { IntersectionType } from '@nestjs/swagger';
+import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
+import { OmitType } from '@nestjs/swagger';
 
-import { CreateTransactionBodyDTO } from './create-transaction-body.dto';
-import { CreateTransactionRequestDTO } from './create-transaction-request.dto';
-
-export class CreateTransactionDTO extends IntersectionType(
-  CreateTransactionRequestDTO,
-  CreateTransactionBodyDTO,
-) {}
+export class CreateTransactionDTO extends OmitType(TransactionDTO, [
+  'id',
+  'user',
+  'createdAt',
+  'updatedAt',
+]) {}

@@ -1,10 +1,6 @@
-import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
+import { CreateTransactionDTO } from '@modules/transactions/repositories/dtos/create-transaction.dto';
 import { OmitType } from '@nestjs/swagger';
 
-export class CreateTransactionBodyDTO extends OmitType(TransactionDTO, [
-  'id',
-  'user',
+export class CreateTransactionBodyDTO extends OmitType(CreateTransactionDTO, [
   'userId',
-  'createdAt',
-  'updatedAt',
 ]) {}

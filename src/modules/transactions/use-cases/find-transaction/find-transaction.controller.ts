@@ -1,25 +1,17 @@
+import { AuthUser } from '@decorators/auth-user.decorator';
+import { JwtAuth } from '@decorators/auth.decorator';
 import { HttpExceptionDTO } from '@errors/http-exception.dto';
-import { JwtAuthGuard } from '@modules/auth/guards/jwt.guard';
 import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
-import {
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthenticatedRequest } from '@src/shared/dtos/authenticated-request.dto';
+import { User } from '@modules/users/entities/user';
+import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { FindTransactionParamsDTO } from './dtos/find-transaction-params.dto';
 import { FindTransactionService } from './find-transaction.service';
 
 @Controller('transactions')
 @ApiTags('transactions')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@JwtAuth()
 export class FindTransactionController {
   constructor(
     private readonly findTransactionService: FindTransactionService,
@@ -38,12 +30,12 @@ export class FindTransactionController {
     type: HttpExceptionDTO,
   })
   async handle(
-    @Req() request: AuthenticatedRequest,
+    @AuthUser() user: User,
     @Param() params: FindTransactionParamsDTO,
   ): Promise<TransactionDTO> {
     return this.findTransactionService.execute({
       ...params,
-      userId: request.user.id,
+      userId: user.id,
     });
   }
 }

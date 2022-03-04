@@ -1,9 +1,7 @@
-import { IntersectionType } from '@nestjs/swagger';
+import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
+import { PickType } from '@nestjs/swagger';
 
-import { FindTransactionParamsDTO } from './find-transaction-params.dto';
-import { FindTransactionRequestDTO } from './find-transaction-request.dto';
-
-export class FindTransactionDTO extends IntersectionType(
-  FindTransactionParamsDTO,
-  FindTransactionRequestDTO,
-) {}
+export class FindTransactionDTO extends PickType(TransactionDTO, [
+  'id',
+  'userId',
+]) {}

@@ -1,6 +1,7 @@
-import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
 import { PickType } from '@nestjs/swagger';
 
-export class FindTransactionParamsDTO extends PickType(TransactionDTO, [
+import { FindTransactionDTO } from './find-transaction.dto';
+
+export class FindTransactionParamsDTO extends PickType(FindTransactionDTO, [
   'id',
 ]) {}

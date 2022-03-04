@@ -1,18 +1,20 @@
-import { JwtAuthGuard } from '@modules/auth/guards/jwt.guard';
+import { Request } from 'express';
+
+import { AuthUser } from '@decorators/auth-user.decorator';
+import { JwtAuth } from '@decorators/auth.decorator';
 import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
+import { User } from '@modules/users/entities/user';
 import {
   Controller,
   HttpCode,
   HttpStatus,
   Get,
-  UseGuards,
   Query,
   Req,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { paginate } from '@src/adapters/PaginationAdapter';
-import { AuthenticatedRequest } from '@src/shared/dtos/authenticated-request.dto';
 
 import { ListTransactionsQueryDTO } from './dtos/list-transactions-query.dto';
 import { ListTransactionsResponseDTO } from './dtos/list-transactions-response.dto';
@@ -20,8 +22,7 @@ import { ListTransactionsService } from './list-transactions.service';
 
 @ApiTags('transactions')
 @Controller('transactions')
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@JwtAuth()
 export class ListTransactionsController {
   constructor(
     private readonly listTransactionsService: ListTransactionsService,
@@ -37,7 +38,9 @@ export class ListTransactionsController {
   })
   async handle(
     @Req()
-    request: AuthenticatedRequest,
+    request: Request,
+    @AuthUser()
+    user: User,
     @Query() { page: pageQuery, ...query }: ListTransactionsQueryDTO,
   ): Promise<ListTransactionsResponseDTO> {
     const limit = Number(this.configService.get('PAGINATION_LIMIT')) || 10;
@@ -45,7 +48,7 @@ export class ListTransactionsController {
 
     const transactions = await this.listTransactionsService.execute(
       {
-        userId: request.user.id,
+        userId: user.id,
         ...query,
       },
       {
