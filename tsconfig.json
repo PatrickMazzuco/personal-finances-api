@@ -25,6 +25,7 @@
       "@modules/*": ["./src/modules/*"],
       "@pipes/*": ["./src/pipes/*"],
       "@utils/*": ["./src/utils/*"],
+      "@decorators/*": ["./src/decorators/*"],
       "@src/*": ["./src/*"]
     }
   }

@@ -67,6 +67,10 @@ export class TransactionsRepository implements ITransactionsRepository {
     await this.repository.update(id, data);
   }
 
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
+
   async truncateTable(): Promise<void> {
     await this.repository.query('DELETE FROM transactions');
   }

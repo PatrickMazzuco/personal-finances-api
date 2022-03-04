@@ -12,5 +12,6 @@ export interface ITransactionsRepository {
     options: ListAndCountTransactionsOptionsDTO,
   ): Promise<ListAndCountDTO<Transaction>>;
   update(id: string, data: Transaction): Promise<void>;
+  delete(id: string): Promise<void>;
   truncateTable(): Promise<void>;
 }
