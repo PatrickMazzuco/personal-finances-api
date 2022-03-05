@@ -40,8 +40,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - run: yarn & yarn migration:run:test
-      - run: yarn test
+      - name: Install dependencies
+        run: yarn
+
+      - name: Run migrations
+        run: yarn migration:run:test
+
+      - name: Run tests
+        run: yarn test
         env:
           DB_USERNAME: postgres
           DB_PASSWORD: pfa-development
