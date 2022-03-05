@@ -14,7 +14,16 @@ export class CreateTransactionService {
   ) {}
 
   async execute(data: CreateTransactionDTO): Promise<TransactionDTO> {
-    const createdTransaction = await this.transactionsRepository.create(data);
+    const currentDate = new Date();
+    const paymentDate = data.paymentDate
+      ? new Date(data.paymentDate)
+      : new Date();
+
+    const transactionWasPaid = currentDate > paymentDate;
+    const createdTransaction = await this.transactionsRepository.create({
+      ...data,
+      paid: transactionWasPaid,
+    });
 
     return createdTransaction;
   }

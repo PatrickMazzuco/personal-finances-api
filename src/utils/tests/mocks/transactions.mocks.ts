@@ -14,6 +14,8 @@ export function transactionEntityMock(): Transaction {
     userId: transactionUser.id,
     amount: 10000,
     type: TransactionType.EXPENSE,
+    paymentDate: new Date(),
+    paid: true,
     description: 'transaction description',
     user: transactionUser,
     createdAt: new Date(),
@@ -22,12 +24,16 @@ export function transactionEntityMock(): Transaction {
 }
 
 export function createTransactionMock(): CreateTransactionDTO {
-  const { userId, amount, type, description } = transactionEntityMock();
+  const { userId, amount, type, description, paymentDate, paid } =
+    transactionEntityMock();
+
   return {
     userId,
     amount,
     type,
     description,
+    paymentDate,
+    paid,
   };
 }
 

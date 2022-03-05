@@ -28,6 +28,16 @@ export class Transaction {
   @Column('varchar')
   description: string;
 
+  @Column({
+    type: 'timestamp',
+    name: 'payment',
+    default: () => 'CURRENT_DATE',
+  })
+  paymentDate: Date;
+
+  @Column({ type: 'bool', default: false })
+  paid: boolean;
+
   @ManyToOne(() => User, user => user.transactions, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

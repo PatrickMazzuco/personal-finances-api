@@ -63,6 +63,38 @@ describe('CreateTransaction E2E', () => {
     );
   });
 
+  it('should be able to create a new transaction when not sending a payment date', async () => {
+    const newUserData = createUserMock();
+    const newTransactionData = createTransactionMock();
+
+    delete newTransactionData.paymentDate;
+
+    const createdUser = await request(app.getHttpServer())
+      .post('/users')
+      .send(newUserData)
+      .expect(201);
+
+    const loginResponse = await request(app.getHttpServer())
+      .post('/auth')
+      .send({
+        email: newUserData.email,
+        password: newUserData.password,
+      })
+      .expect(200);
+
+    const createdTransaction = await request(app.getHttpServer())
+      .post('/transactions')
+      .set('Authorization', `Bearer ${loginResponse.body.accessToken}`)
+      .send(newTransactionData)
+      .expect(201);
+
+    expect(createdTransaction.body).toHaveProperty('id');
+    expect(createdTransaction.body).toHaveProperty(
+      'userId',
+      createdUser.body.id,
+    );
+  });
+
   it('should not be create a new transaction when not authenticated', async () => {
     const newTransactionData = createTransactionMock();
 

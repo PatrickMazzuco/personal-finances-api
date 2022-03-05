@@ -51,4 +51,25 @@ describe('CreateTransactionService', () => {
 
     expect(createdTransaction).toMatchObject(transaction);
   });
+
+  it('should be able to create a new transaction when not sending a payment date', async () => {
+    const transaction = transactionEntityMock();
+    const newTransactionData = createTransactionMock();
+
+    delete newTransactionData.paymentDate;
+
+    jest
+      .spyOn(UsersRepository.prototype, 'findOne')
+      .mockResolvedValueOnce(transaction.user);
+
+    jest
+      .spyOn(TransactionsRepository.prototype, 'create')
+      .mockResolvedValueOnce(transaction);
+
+    const createdTransaction = await createTransactionService.execute(
+      newTransactionData,
+    );
+
+    expect(createdTransaction).toMatchObject(transaction);
+  });
 });

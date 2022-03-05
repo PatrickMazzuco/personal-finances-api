@@ -4,6 +4,7 @@ import { OmitType } from '@nestjs/swagger';
 export class CreateTransactionDTO extends OmitType(TransactionDTO, [
   'id',
   'user',
+  'paid',
   'createdAt',
   'updatedAt',
 ]) {}

@@ -4,10 +4,13 @@ import {
   IsEnum,
   IsNumber,
   IsString,
+  IsDateString,
+  IsOptional,
+  IsBoolean,
 } from 'class-validator';
 
 import { UserDTO } from '@modules/users/dtos/user.dto';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { TransactionType } from '../enums/transaction-type.enum';
 
@@ -36,6 +39,16 @@ export class TransactionDTO {
   @IsNotEmpty()
   @ApiProperty()
   description: string;
+
+  @IsDateString()
+  @IsOptional()
+  @ApiPropertyOptional({ default: new Date() })
+  paymentDate?: Date;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @ApiProperty()
+  paid: boolean;
 
   user: UserDTO;
 
