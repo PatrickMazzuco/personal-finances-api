@@ -21,6 +21,8 @@ jobs:
       DB_NAME: personal_finances_test
       DB_HOSTNAME: localhost
       DB_PORT: 5432
+      JWT_SECRET: test_secret
+      JWT_EXPIRES_IN: 1d
 
     services:
       postgres:
