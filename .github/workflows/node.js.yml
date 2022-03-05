@@ -22,7 +22,7 @@ jobs:
         env:
           POSTGRES_PASSWORD: pfa-development
           POSTGRES_USER: postgres
-          DB_NAME: personal_finances_test
+          POSTGRES_DB: personal_finances_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -40,7 +40,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - run: yarn
+      - run: yarn & yarn migration:run:test
       - run: yarn test
         env:
           DB_USERNAME: postgres
