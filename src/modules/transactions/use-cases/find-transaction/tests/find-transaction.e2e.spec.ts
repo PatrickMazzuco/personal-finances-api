@@ -109,7 +109,7 @@ describe('FindTransaction E2E', () => {
       .expect(403);
   });
 
-  it('should not be find a transaction when not authenticated', async () => {
+  it('should not be able to find a transaction when not authenticated', async () => {
     await request(app.getHttpServer())
       .get(`/transactions/${transactionId}`)
       .send()
