@@ -15,6 +15,12 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+    env:
+      DB_USERNAME: postgres
+      DB_PASSWORD: pfa-development
+      DB_NAME: personal_finances_test
+      DB_HOSTNAME: localhost
+      DB_PORT: 5432
 
     services:
       postgres:
@@ -48,9 +54,3 @@ jobs:
 
       - name: Run tests
         run: yarn test
-        env:
-          DB_USERNAME: postgres
-          DB_PASSWORD: pfa-development
-          DB_NAME: personal_finances_test
-          DB_HOSTNAME: localhost
-          DB_PORT: 5432
