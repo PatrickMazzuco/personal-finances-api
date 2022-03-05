@@ -1,4 +1,5 @@
-import { IsEnum, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsEnum, IsNumber, IsOptional, Max, Min } from 'class-validator';
 
 import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
 import {
@@ -13,6 +14,7 @@ import { SortingOrder } from '@src/shared/enums/sorting-order.enum';
 export enum SortingAttribute {
   CREATED_AT = 'createdAt',
   UPDATED_AT = 'updatedAt',
+  PAYMENT_DATE = 'paymentDate',
 }
 
 class ListTransactionsFieldsDTO extends PickType(TransactionDTO, [
@@ -30,7 +32,7 @@ export class ListTransactionsQueryDTO extends PartialType(
 ) {
   @ApiPropertyOptional({
     enum: SortingAttribute,
-    default: SortingAttribute.CREATED_AT,
+    default: SortingAttribute.PAYMENT_DATE,
   })
   @IsOptional()
   @IsEnum(SortingAttribute, {
@@ -48,4 +50,20 @@ export class ListTransactionsQueryDTO extends PartialType(
     ).join(', ')}`,
   })
   order?: SortingOrder;
+
+  @IsNumber()
+  @Max(12)
+  @Min(1)
+  @IsOptional()
+  @Type(() => Number)
+  @ApiPropertyOptional({ type: Number, minimum: 1, maximum: 12 })
+  month?: number;
+
+  @IsNumber()
+  @Max(9999)
+  @Min(1000)
+  @IsOptional()
+  @Type(() => Number)
+  @ApiPropertyOptional({ type: Number, minLength: 4, maxLength: 4 })
+  year?: number;
 }

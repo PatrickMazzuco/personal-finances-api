@@ -9,4 +9,7 @@ class ListTransactionsFieldsDTO extends PickType(TransactionDTO, [
 
 export class ListTransactionsFiltersDTO extends PartialType(
   ListTransactionsFieldsDTO,
-) {}
+) {
+  month?: number;
+  year?: number;
+}

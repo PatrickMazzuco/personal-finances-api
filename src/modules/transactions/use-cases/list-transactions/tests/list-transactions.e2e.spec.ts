@@ -3,6 +3,7 @@ import * as request from 'supertest';
 import { TransactionType } from '@modules/transactions/enums/transaction-type.enum';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { ClassValidatorPipe } from '@pipes/validation.pipe';
 import { AppModule } from '@src/app.module';
 import { DatabaseTestHelper } from '@utils/tests/helpers/database';
 import { createTransactionMock } from '@utils/tests/mocks/transactions.mocks';
@@ -13,6 +14,7 @@ describe('ListTransactions E2E', () => {
 
   let databaseHelper: DatabaseTestHelper;
   let userToken: string;
+  let futurePaymentDate: Date;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -20,6 +22,12 @@ describe('ListTransactions E2E', () => {
     }).compile();
 
     app = module.createNestApplication();
+    app.useGlobalPipes(
+      new ClassValidatorPipe({
+        whitelist: true,
+        transform: true,
+      }),
+    );
 
     databaseHelper = new DatabaseTestHelper(module);
 
@@ -57,6 +65,9 @@ describe('ListTransactions E2E', () => {
       .send(newTransactionData)
       .expect(201);
 
+    const futureDate = new Date();
+    futureDate.setFullYear(new Date().getFullYear() + 1);
+
     await request(app.getHttpServer())
       .post('/transactions')
       .set('Authorization', `Bearer ${loginResponse.body.accessToken}`)
@@ -64,10 +75,12 @@ describe('ListTransactions E2E', () => {
         ...newTransactionData,
         type: TransactionType.INCOME,
         description: 'descritpion to filter',
+        paymentDate: futureDate,
       })
       .expect(201);
 
     userToken = loginResponse.body.accessToken;
+    futurePaymentDate = futureDate;
   }
 
   beforeEach(async () => {
@@ -114,6 +127,54 @@ describe('ListTransactions E2E', () => {
     expect(existingTransaction.body).toHaveProperty('links');
     expect(existingTransaction.body).toHaveProperty('data');
     expect(existingTransaction.body.data).toHaveLength(1);
+  });
+
+  it("should be able to list a user's transactions with date filter", async () => {
+    const existingTransaction = await request(app.getHttpServer())
+      .get(`/transactions`)
+      .query({
+        month: futurePaymentDate.getMonth() + 1,
+        year: futurePaymentDate.getFullYear(),
+      })
+      .set('Authorization', `Bearer ${userToken}`)
+      .send()
+      .expect(200);
+
+    expect(existingTransaction.body).toHaveProperty('meta');
+    expect(existingTransaction.body).toHaveProperty('links');
+    expect(existingTransaction.body).toHaveProperty('data');
+    expect(existingTransaction.body.data).toHaveLength(1);
+  });
+
+  it("should not be able to list a user's transactions when sending invalid date", async () => {
+    await request(app.getHttpServer())
+      .get(`/transactions`)
+      .query({
+        month: 13,
+        year: 2,
+      })
+      .set('Authorization', `Bearer ${userToken}`)
+      .send()
+      .expect(400)
+      .then(response => {
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+      });
+  });
+
+  it("should not be able to list a user's transactions when sending invalid type", async () => {
+    await request(app.getHttpServer())
+      .get(`/transactions`)
+      .query({
+        type: 'INVALID_TYPE',
+      })
+      .set('Authorization', `Bearer ${userToken}`)
+      .send()
+      .expect(400)
+      .then(response => {
+        expect(response.body).toHaveProperty('message');
+        expect(response.body).toHaveProperty('errors');
+      });
   });
 
   it('should not be able to list transactions when not authenticated', async () => {

@@ -1,6 +1,8 @@
-import { Like, Repository } from 'typeorm';
+import * as dayjs from 'dayjs';
+import { Between, FindCondition, ILike, Repository } from 'typeorm';
 
 import { Transaction } from '@modules/transactions/entities/transaction';
+import { SortingAttribute } from '@modules/transactions/use-cases/list-transactions/dtos/list-transactions-query.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ListAndCountDTO } from '@src/shared/dtos/list-and-count.dto';
 import {
@@ -36,20 +38,43 @@ export class TransactionsRepository implements ITransactionsRepository {
     filters,
     page = 1,
     limit = 10,
-    sort = 'createdAt',
+    sort = SortingAttribute.PAYMENT_DATE,
     order = SortingOrder.DESCENDING,
   }: ListAndCountTransactionsOptionsDTO): Promise<
     ListAndCountDTO<Transaction>
   > {
-    const parsedFilters = {
-      ...filters,
-      description: Like(`%${filters.description}%`),
+    const { month, year, description, ...otherFilters } = filters;
+
+    const parsedFilters: FindCondition<Transaction> = {
+      ...otherFilters,
     };
 
-    if (!filters.description) delete parsedFilters.description;
+    if (description) {
+      parsedFilters.description = ILike(`%${description}%`);
+    }
+
+    if (year) {
+      if (month) {
+        const baseDate = dayjs()
+          .set('year', year)
+          .set('month', month - 1);
+
+        const firstDayOfMonth = baseDate.startOf('month').toDate();
+        const lastDayOfMonth = baseDate.endOf('month').toDate();
+
+        parsedFilters.paymentDate = Between(firstDayOfMonth, lastDayOfMonth);
+      } else {
+        const baseDate = dayjs().set('year', year);
+
+        const firstDayOfYear = baseDate.startOf('year').toDate();
+        const lastDayOfYear = baseDate.endOf('year').toDate();
+
+        parsedFilters.paymentDate = Between(firstDayOfYear, lastDayOfYear);
+      }
+    }
 
     const [transactions, count] = await this.repository.findAndCount({
-      where: { ...parsedFilters },
+      where: parsedFilters,
       take: limit,
       skip: limit * (page - 1),
       order: {
