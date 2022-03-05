@@ -7,12 +7,12 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '@src/app.module';
 import { transactionEntityMock } from '@utils/tests/mocks/transactions.mocks';
 
-import { FindTransactionService } from '../find-transaction.service';
+import { DeleteTransactionService } from '../delete-transaction.service';
 
-describe('FindTransactionService', () => {
+describe('DeleteTransactionService', () => {
   let app: INestApplication;
 
-  let findTransactionService: FindTransactionService;
+  let deleteTransactionService: DeleteTransactionService;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -21,8 +21,8 @@ describe('FindTransactionService', () => {
 
     app = module.createNestApplication();
 
-    findTransactionService = module.get<FindTransactionService>(
-      FindTransactionService,
+    deleteTransactionService = module.get<DeleteTransactionService>(
+      DeleteTransactionService,
     );
 
     await app.init();
@@ -32,22 +32,26 @@ describe('FindTransactionService', () => {
     await app.close();
   });
 
-  it('should be able to find an existing transaction', async () => {
+  it('should be able to delete a transaction', async () => {
     const transaction = transactionEntityMock();
 
     jest
       .spyOn(TransactionsRepository.prototype, 'findOne')
       .mockResolvedValueOnce(transaction);
 
-    const createdTransaction = await findTransactionService.execute({
-      id: transaction.id,
-      userId: transaction.userId,
-    });
+    jest
+      .spyOn(TransactionsRepository.prototype, 'delete')
+      .mockResolvedValueOnce();
 
-    expect(createdTransaction).toMatchObject(transaction);
+    await expect(
+      deleteTransactionService.execute({
+        id: transaction.id,
+        userId: transaction.userId,
+      }),
+    ).resolves.not.toThrow();
   });
 
-  it('should not be able to find an inexistent transaction', async () => {
+  it('should not be able to delete an inexistent transaction', async () => {
     const transaction = transactionEntityMock();
 
     jest
@@ -55,14 +59,14 @@ describe('FindTransactionService', () => {
       .mockResolvedValueOnce(null);
 
     await expect(
-      findTransactionService.execute({
+      deleteTransactionService.execute({
         id: transaction.id,
         userId: transaction.userId,
       }),
     ).rejects.toBeInstanceOf(TransactionErrors.NotFound);
   });
 
-  it('should not be able to find a transatiction of a different user', async () => {
+  it('should not be able to delete a transatiction of a different user', async () => {
     const transaction = transactionEntityMock();
 
     jest
@@ -70,7 +74,7 @@ describe('FindTransactionService', () => {
       .mockResolvedValueOnce(transaction);
 
     await expect(
-      findTransactionService.execute({
+      deleteTransactionService.execute({
         id: transaction.id,
         userId: uuid(),
       }),
