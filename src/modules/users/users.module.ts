@@ -1,5 +1,7 @@
+import { BCryptPasswordHash } from '@modules/users/providers/implementations/bcrypt-password-hash.provider';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ProviderToken } from '@src/shared/enums/provider-token.enum';
 import { RepositoryToken } from '@src/shared/enums/repository-token.enum';
 
 import { User } from './entities/user';
@@ -15,15 +17,21 @@ const usersRepositoryProvider = {
   provide: RepositoryToken.USERS_REPOSITORY,
   useClass: UsersRepository,
 };
+
+const passwordHashProvider = {
+  provide: ProviderToken.PASSWORD_HASH,
+  useClass: BCryptPasswordHash,
+};
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [CreateUserController, FindUserController, UpdateUserController],
   providers: [
     usersRepositoryProvider,
+    passwordHashProvider,
     CreateUserService,
     FindUserService,
     UpdateUserService,
   ],
-  exports: [usersRepositoryProvider],
+  exports: [usersRepositoryProvider, passwordHashProvider],
 })
 export class UsersModule {}

@@ -1,8 +1,9 @@
 import { UserErrors } from '@modules/users/errors/user.errors';
+import { IPasswordHash } from '@modules/users/providers/password-hash.provider';
 import { IUsersRepository } from '@modules/users/repositories/users-repository.interface';
 import { Inject, Logger } from '@nestjs/common';
+import { ProviderToken } from '@src/shared/enums/provider-token.enum';
 import { RepositoryToken } from '@src/shared/enums/repository-token.enum';
-import { PasswordHash } from '@utils/security/password-hash';
 
 import { UpdateUserDTO } from './dtos/update-user.dto';
 
@@ -12,6 +13,8 @@ export class UpdateUserService {
   constructor(
     @Inject(RepositoryToken.USERS_REPOSITORY)
     private readonly usersRepository: IUsersRepository,
+    @Inject(ProviderToken.PASSWORD_HASH)
+    private readonly passwordHash: IPasswordHash,
   ) {}
 
   async execute(data: UpdateUserDTO): Promise<void> {
@@ -31,7 +34,7 @@ export class UpdateUserService {
     }
 
     if (data.password) {
-      const hashedPassword = await PasswordHash.hash(data.password);
+      const hashedPassword = await this.passwordHash.hash(data.password);
       dataToUpdate.password = hashedPassword;
     }
 

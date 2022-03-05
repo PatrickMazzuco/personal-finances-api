@@ -1,9 +1,10 @@
 import { AuthErrors } from '@modules/auth/errors/auth.errors';
+import { IPasswordHash } from '@modules/users/providers/password-hash.provider';
 import { UsersRepository } from '@modules/users/repositories/implementations/users-repository';
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '@src/app.module';
-import { PasswordHash } from '@utils/security/password-hash';
+import { ProviderToken } from '@src/shared/enums/provider-token.enum';
 import { userEntityMock } from '@utils/tests/mocks/users.mocks';
 
 import { AuthenticateService } from '../authenticate.service';
@@ -12,6 +13,7 @@ describe('AuthenticateService', () => {
   let app: INestApplication;
 
   let authenticateService: AuthenticateService;
+  let passwordHash: IPasswordHash;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -21,6 +23,7 @@ describe('AuthenticateService', () => {
     app = module.createNestApplication();
 
     authenticateService = module.get<AuthenticateService>(AuthenticateService);
+    passwordHash = module.get<IPasswordHash>(ProviderToken.PASSWORD_HASH);
 
     await app.init();
   });
@@ -37,7 +40,7 @@ describe('AuthenticateService', () => {
       password: user.password,
     };
 
-    const hashedPassword = await PasswordHash.hash(user.password);
+    const hashedPassword = await passwordHash.hash(user.password);
     user.password = hashedPassword;
 
     jest
@@ -74,7 +77,7 @@ describe('AuthenticateService', () => {
       password: 'wrong-password',
     };
 
-    const hashedPassword = await PasswordHash.hash(user.password);
+    const hashedPassword = await passwordHash.hash(user.password);
     user.password = hashedPassword;
 
     jest
