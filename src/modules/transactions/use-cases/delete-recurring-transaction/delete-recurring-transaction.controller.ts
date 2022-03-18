@@ -11,33 +11,33 @@ import {
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { DeleteTransactionService } from './delete-transaction.service';
-import { DeleteTransactionParamsDTO } from './dtos/delete-transaction-params.dto';
+import { DeleteRecurringTransactionService } from './delete-recurring-transaction.service';
+import { DeleteRecurringTransactionParamsDTO } from './dtos/delete-recurring-transaction-params.dto';
 
-@Controller('transactions')
-@ApiTags('transactions')
+@Controller('recurring-transactions')
+@ApiTags('recurring-transactions')
 @JwtAuth()
-export class DeleteTransactionController {
+export class DeleteRecurringTransactionController {
   constructor(
-    private readonly deleteTransactionService: DeleteTransactionService,
+    private readonly deleteRecurringTransactionService: DeleteRecurringTransactionService,
   ) {}
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
-    description: 'Transaction removed',
+    description: 'Recurring Transaction removed',
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'Transaction not found',
+    description: 'Recurring Transaction not found',
     type: HttpExceptionDTO,
   })
   async handle(
     @AuthUser() user: User,
-    @Param() params: DeleteTransactionParamsDTO,
+    @Param() params: DeleteRecurringTransactionParamsDTO,
   ): Promise<void> {
-    return this.deleteTransactionService.execute({
+    return this.deleteRecurringTransactionService.execute({
       ...params,
       userId: user.id,
     });

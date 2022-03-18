@@ -2,12 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { User } from '@modules/users/entities/user';
+import { User } from '@modules/users/entities/user.entity';
 
 import { TransactionType } from '../enums/transaction-type.enum';
 
@@ -30,10 +31,11 @@ export class Transaction {
 
   @Column({
     type: 'timestamp',
-    name: 'payment',
+    name: 'payment_date',
+    nullable: true,
     default: () => 'CURRENT_DATE',
   })
-  paymentDate: Date;
+  paymentDate?: Date;
 
   @Column({ type: 'bool', default: false })
   paid: boolean;
@@ -42,6 +44,7 @@ export class Transaction {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })

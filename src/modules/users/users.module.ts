@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProviderToken } from '@src/shared/enums/provider-token.enum';
 import { RepositoryToken } from '@src/shared/enums/repository-token.enum';
 
-import { User } from './entities/user';
+import { User } from './entities/user.entity';
 import { UsersRepository } from './repositories/implementations/users-repository';
 import { CreateUserController } from './use-cases/create-user/create-user.controller';
 import { CreateUserService } from './use-cases/create-user/create-user.service';

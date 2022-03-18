@@ -1,4 +1,4 @@
-import { Transaction } from '@modules/transactions/entities/transaction';
+import { Transaction } from '@modules/transactions/entities/transaction.entity';
 import { ITransactionsRepository } from '@modules/transactions/repositories/transactions-repository.interface';
 import { IUsersRepository } from '@modules/users/repositories/users-repository.interface';
 import { Inject, Logger } from '@nestjs/common';
@@ -26,10 +26,7 @@ export class ListTransactionsService {
     query: ListTransactionsDTO,
     paginationOptions: ListTransactionsPaginationOptionsDTO,
   ): Promise<ListAndCountDTO<Transaction>> {
-    const {
-      limit = Number(this.configService.get('PAGINATION_LIMIT')) || 10,
-      page = 1,
-    } = paginationOptions;
+    const { limit, page } = paginationOptions;
 
     const { sort, order, ...filters } = query;
 

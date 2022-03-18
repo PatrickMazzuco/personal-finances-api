@@ -1,6 +1,6 @@
 import { ListAndCountDTO } from '@src/shared/dtos/list-and-count.dto';
 
-import { Transaction } from '../entities/transaction';
+import { Transaction } from '../entities/transaction.entity';
 import { CreateTransactionDTO } from './dtos/create-transaction.dto';
 import { ListAndCountTransactionsOptionsDTO } from './dtos/list-and-count-transactions-options.dto';
 

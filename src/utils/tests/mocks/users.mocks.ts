@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { User } from '@modules/users/entities/user';
+import { User } from '@modules/users/entities/user.entity';
 import { CreateUserDTO } from '@modules/users/repositories/dtos/create-user.dto';
 import { UpdateUserDTO } from '@modules/users/use-cases/update-user/dtos/update-user.dto';
 
@@ -11,6 +11,7 @@ export function userEntityMock(): User {
     email: 'jhondoe@email.com',
     password: '123456',
     transactions: [],
+    recurringTransactions: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   };

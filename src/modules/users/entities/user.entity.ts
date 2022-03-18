@@ -7,7 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Transaction } from '@modules/transactions/entities/transaction';
+import { RecurringTransaction } from '@modules/transactions/entities/recurring-transaction.entity';
+import { Transaction } from '@modules/transactions/entities/transaction.entity';
 
 @Entity('users')
 export class User {
@@ -25,6 +26,12 @@ export class User {
 
   @OneToMany(() => Transaction, transaction => transaction.user)
   transactions: Transaction[];
+
+  @OneToMany(
+    () => RecurringTransaction,
+    recurringTransaction => recurringTransaction.user,
+  )
+  recurringTransactions: RecurringTransaction[];
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   createdAt: Date;

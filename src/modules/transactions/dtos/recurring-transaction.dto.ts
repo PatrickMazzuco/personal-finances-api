@@ -4,17 +4,16 @@ import {
   IsEnum,
   IsNumber,
   IsString,
-  IsDateString,
-  IsOptional,
-  IsBoolean,
+  Min,
+  Max,
 } from 'class-validator';
 
 import { UserDTO } from '@modules/users/dtos/user.dto';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { TransactionType } from '../enums/transaction-type.enum';
 
-export class TransactionDTO {
+export class RecurringTransactionDTO {
   @IsUUID()
   @IsNotEmpty()
   @ApiProperty()
@@ -44,15 +43,15 @@ export class TransactionDTO {
   @ApiProperty()
   description: string;
 
-  @IsDateString()
-  @IsOptional()
-  @ApiPropertyOptional({ default: new Date() })
-  paymentDate?: Date;
-
-  @IsBoolean()
+  @IsNumber()
+  @Min(1)
+  @Max(31)
   @IsNotEmpty()
+  @ApiProperty({ type: Number, minimum: 1, maximum: 31 })
+  paymentDay: number;
+
   @ApiProperty()
-  paid: boolean;
+  active?: boolean;
 
   user: UserDTO;
 

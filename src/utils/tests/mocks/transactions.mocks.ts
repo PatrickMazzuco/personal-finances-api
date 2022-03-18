@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { Transaction } from '@modules/transactions/entities/transaction';
+import { Transaction } from '@modules/transactions/entities/transaction.entity';
 import { TransactionType } from '@modules/transactions/enums/transaction-type.enum';
 import { CreateTransactionDTO } from '@modules/transactions/repositories/dtos/create-transaction.dto';
 import { UpdateTransactionDTO } from '@modules/transactions/repositories/dtos/update-transaction.dto';

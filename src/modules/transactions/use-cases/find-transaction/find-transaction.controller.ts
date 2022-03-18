@@ -2,7 +2,7 @@ import { AuthUser } from '@decorators/auth-user.decorator';
 import { JwtAuth } from '@decorators/auth.decorator';
 import { HttpExceptionDTO } from '@errors/http-exception.dto';
 import { TransactionDTO } from '@modules/transactions/dtos/transaction.dto';
-import { User } from '@modules/users/entities/user';
+import { User } from '@modules/users/entities/user.entity';
 import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 

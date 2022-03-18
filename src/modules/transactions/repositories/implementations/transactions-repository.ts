@@ -1,8 +1,8 @@
 import * as dayjs from 'dayjs';
 import { Between, FindCondition, ILike, Repository } from 'typeorm';
 
-import { Transaction } from '@modules/transactions/entities/transaction';
-import { SortingAttribute } from '@modules/transactions/use-cases/list-transactions/dtos/list-transactions-query.dto';
+import { Transaction } from '@modules/transactions/entities/transaction.entity';
+import { TransactionSortingAttribute } from '@modules/transactions/enums/transaction-sorting-attribute.enum';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ListAndCountDTO } from '@src/shared/dtos/list-and-count.dto';
 import {
@@ -38,7 +38,7 @@ export class TransactionsRepository implements ITransactionsRepository {
     filters,
     page = 1,
     limit = 10,
-    sort = SortingAttribute.PAYMENT_DATE,
+    sort = TransactionSortingAttribute.PAYMENT_DATE,
     order = SortingOrder.DESCENDING,
   }: ListAndCountTransactionsOptionsDTO): Promise<
     ListAndCountDTO<Transaction>

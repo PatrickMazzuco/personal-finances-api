@@ -1,7 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { User } from '@modules/users/entities/user';
+import { User } from '@modules/users/entities/user.entity';
 import { IUsersRepository } from '@modules/users/repositories/users-repository.interface';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
